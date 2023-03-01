@@ -1,0 +1,40 @@
+@use './styles';
+
+.racquet-string-tension {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid grey;
+    margin: 0 0 0.5em 0;
+}
+
+.racquet-string-tension>* {
+    margin: 0.2em 0.1em 0.2em 0.1em;
+}
+
+#first-order-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 0.5em;
+}
+
+.remove-order {
+    @include styles.circle;
+    background-color: rgb(239, 118, 37);
+    color: white;
+    line-height: 0.5em;
+    height: 18px;
+    width: 18px;
+}
+
+.halfsize-input {
+    width: 35%;
+}
+
+.number-input {
+    width: 20%;
+}
+
+#tension-units {
+    padding: 0.1em;
+}

@@ -1,5 +1,12 @@
 import React from 'react';
+import WorkOrder from './components/workOrder';
 
-export default function App() {
-    return <h1>Hello World!</h1>
+const App = () => {
+    return (
+        <>
+            <WorkOrder />
+        </>
+    );
 };
+
+export default App;

@@ -1,0 +1,25 @@
+@use './styles';
+
+form {
+    @include styles.flex-column;
+}
+
+form>* {
+    margin: 0.3em 0.1em 0.3em 0.1em;
+}
+
+#more-orders {
+    @include styles.circle;
+    background-color: rgb(97, 167, 229);
+    color: white;
+    height: 20px;
+    width: 20px;
+}
+
+#notes {
+    @include styles.flex-column;
+}
+
+#notes>textarea {
+    margin-top: 0.3em;
+}

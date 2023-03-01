@@ -1,0 +1,14 @@
+@mixin circle {
+    display: inline-block;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    text-decoration: none;
+    padding: 0.06em 0 0 0.04em;
+}
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
