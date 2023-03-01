@@ -18,6 +18,7 @@ module.exports = {
             publicPath: '/',
         },
         port: process.env.SERVER_PORT,
+        historyApiFallback: true,
         headers: { 'Access-Control-Allow-Origin': '*' },
         proxy: { '/orders': 'http://localhost:3000/' }
     },

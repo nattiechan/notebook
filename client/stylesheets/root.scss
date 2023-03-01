@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+}
+
+header {
+    background-color: #a3c9d0;
+    padding: 0.5em;
+    position: sticky;
+    top: 0px;
+
+    ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    li {
+        list-style: none;
+        margin: 0.5em;
+    }
+
+    .header-link {
+        text-decoration: none;
+        color: black;
+    }
+}
