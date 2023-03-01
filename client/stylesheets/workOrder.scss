@@ -2,10 +2,10 @@
 
 form {
     @include styles.flex-column;
-}
 
-form>* {
-    margin: 0.3em 0.1em 0.3em 0.1em;
+    * {
+        margin: 0.2em 0.1em 0.2em 0.1em;
+    }
 }
 
 #more-orders {
@@ -16,10 +16,14 @@ form>* {
     width: 20px;
 }
 
-#notes {
+#noteLabel {
     @include styles.flex-column;
+
+    textarea {
+        margin-top: 0.3em;
+    }
 }
 
-#notes>textarea {
-    margin-top: 0.3em;
+input[type=submit] {
+    margin-top: 1em;
 }

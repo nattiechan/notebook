@@ -1,18 +1,20 @@
 import React from 'react';
-import DropdownSelect from './dropdown';
+import DropdownOrders from './dropdownOrders';
 import '../stylesheets/order.scss';
 
 function Order(props) {
-    const { state, id, handleRemoveOrder } = props;
+    const { state, id, handleRemoveOrder, handleOrderChange } = props;
     return (
-        <section className='racquet-string-tension'>
+        <section id={id} className='racquet-string-tension'>
             <div id='first-order-row'>
                 <label>
                     # of Racquets:{' '}
                     <input
+                        id='num_of_racquets'
                         type='number'
                         className='number-input'
-                        value={state.defaultUnits.num_of_racquets}
+                        placeholder={state.defaultUnits.num_of_racquets}
+                        onChange={(event) => handleOrderChange(id, event)}
                     />
                 </label>
                 <button
@@ -23,49 +25,91 @@ function Order(props) {
                     -
                 </button>
             </div>
-            <label>Racquet: <input type='text' /></label>
+            <label>Racquet:{' '}
+                <input
+                    id='racquet_name'
+                    type='text'
+                    onChange={(event) => handleOrderChange(id, event)}
+                />
+            </label>
             <label>
                 String:{' '}
-                <input type='text' id='main' className='halfsize-input' />
+                <input
+                    id='main_string'
+                    type='text'
+                    className='halfsize-input'
+                    onChange={(event) => handleOrderChange(id, event, 'cross_string')}
+                    required
+                />
                 {' / '}
-                <input type='text' id='cross' className='halfsize-input' />
+                <input
+                    id='cross_string'
+                    type='text'
+                    className='halfsize-input'
+                    onChange={(event) => handleOrderChange(id, event)}
+                />
             </label>
             <label>
                 Tension:{' '}
-                <input type='text' id='main' className='number-input' />
+                <input
+                    id='main_tension'
+                    type='number'
+                    className='number-input'
+                    onChange={(event) => handleOrderChange(id, event, 'cross_tension')}
+                    required
+                />
                 {' / '}
-                <input type='text' id='cross' className='number-input' />
+                <input
+                    id='cross_tension'
+                    type='number'
+                    className='number-input'
+                    onChange={(event) => handleOrderChange(id, event)}
+                />
                 {' '}
-                <DropdownSelect
-                    selectId='tension-units'
+                <DropdownOrders
+                    id='tension_measuring_unit'
+                    orderId={id}
                     defaultValue={state.defaultUnits.tension_measuring_unit}
                     valueList={['kg']}
+                    onDropdownChange={handleOrderChange}
                 />
             </label>
             <label>
                 Pre-stretch:{' '}
-                <DropdownSelect
+                <DropdownOrders
+                    id='main_pre_stretch'
+                    orderId={id}
                     defaultValue={state.defaultEmptyValue}
                     valueList={['5%', '10%', '15%', '20%', 'By hand']}
+                    onDropdownChange={handleOrderChange}
                 />
                 {' / '}
-                <DropdownSelect
+                <DropdownOrders
+                    id='cross_pre_stretch'
+                    orderId={id}
                     defaultValue={state.defaultEmptyValue}
                     valueList={['5%', '10%', '15%', '20%', 'By hand']}
+                    onDropdownChange={handleOrderChange}
                 />
             </label>
             <label>
                 Knots:{' '}
-                <DropdownSelect
+                <DropdownOrders
+                    id='num_of_knots'
+                    orderId={id}
                     defaultValue={state.defaultUnits.num_of_knots}
                     valueList={[2]}
+                    onDropdownChange={handleOrderChange}
                 />
             </label>
             <label>
                 Logo:{' '}
-                <DropdownSelect
+                <DropdownOrders
+                    id='logo'
+                    orderId={id}
                     defaultValue={state.defaultEmptyValue}
                     valueList={['Red', 'Black', 'White', 'See notes']}
+                    onDropdownChange={handleOrderChange}
                 />
             </label>
         </section>

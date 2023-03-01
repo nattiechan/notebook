@@ -2,7 +2,9 @@ import React from 'react';
 import Order from './order';
 import { useEffect, useState } from 'react';
 import '../stylesheets/workOrder.scss';
-import DropdownSelect from './dropdown';
+import DropdownSummary from './dropdownSummary';
+
+const ORDER_ID_KEY = 'orderId';
 
 const initialState = {
     orderSummary: {},
@@ -17,6 +19,7 @@ const initialState = {
         'num_of_knots': 4,
         'num_of_racquets': 1,
         'isOnCourt': false,
+        'isPaid': false,
         'date_in': new Date().toISOString()
     },
 };
@@ -24,24 +27,25 @@ const initialState = {
 function WorkOrder() {
     const [state, setState] = useState(initialState);
 
-    const createNewOrderState = (json) => {
+    const createNewOrderState = (currentState = state, json = undefined) => {
         const initialSummary = {};
-        const initialOrder = { orderId: state.nextOrderId };
-        const summaryKeyArray = json ? json.summaryKeys : state.summaryKeys;
-        const orderKeyArray = json ? json.orderKeys : state.orderKeys;
+        const initialOrder = {};
+        initialOrder[ORDER_ID_KEY] = state.nextOrderId;
+        const summaryKeyArray = json ? json.summaryKeys : currentState.summaryKeys;
+        const orderKeyArray = json ? json.orderKeys : currentState.orderKeys;
         const processKeys = (keyArray, initialObj) => {
             keyArray.forEach(key =>
-                initialObj[key] = state.defaultUnits.hasOwnProperty(key) ?
-                    state.defaultUnits[key] : ''
+                initialObj[key] = currentState.defaultUnits.hasOwnProperty(key) ?
+                    currentState.defaultUnits[key] : ''
             );
         }
         processKeys(summaryKeyArray, initialSummary);
         processKeys(orderKeyArray, initialOrder);
         const newState = {
-            ...state,
-            nextOrderId: state.nextOrderId + 1,
+            ...currentState,
+            nextOrderId: currentState.nextOrderId + 1,
             orderSummary: initialSummary,
-            orders: [...state.orders, initialOrder]
+            orders: [...currentState.orders, initialOrder]
         };
         if (json) {
             newState.summaryKeys = summaryKeyArray;
@@ -53,7 +57,7 @@ function WorkOrder() {
     useEffect(() => {
         fetch('/orders/schemaKeys')
             .then(response => response.json())
-            .then(result => createNewOrderState(result));
+            .then(result => createNewOrderState(state, result));
     }, []);
 
     const handleMoreOrderClick = (event) => {
@@ -71,14 +75,45 @@ function WorkOrder() {
         if (!keyArray.includes(id)) throw new Error(`Invalid element ID ${id}`);
     }
 
-    const handleOrderChange = (orderId, eventId, targetValue) => {
-        checkForInvalidId(eventId, state.orderKeys);
-        // TODO
+    const updateOrderSummary = (key, value, event) => {
+        const newOrderSummary = { ...state.orderSummary };
+        updateValue(newOrderSummary, key, value, event);
+        setState({ ...state, orderSummary: newOrderSummary });
     }
 
-    const handleChange = (eventId, targetValue) => {
-        checkForInvalidId(eventId, state.summaryKeys);
-        setState({ ...state, orderSummary: { ...state.orderSummary, eventId: targetValue } });
+    const updateValue = (obj, key, value, event) => {
+        obj[key] = event.target.type === 'number' ? Number(value) : value;
+    }
+
+    const handleOrderChange = (orderId, event, populateValueToId) => {
+        if (orderId === null || orderId === undefined) throw new Error('Invalid ID input');
+        const orderKey = event.target.id;
+        checkForInvalidId(orderKey, state.orderKeys);
+        const value = event.target.value;
+        const newOrders = [...state.orders];
+        if (populateValueToId !== undefined) {
+            const elementToPopulateValue = document
+                .querySelector(`section[id="${orderId}"]`)
+                .querySelector(`#${populateValueToId}`);
+            elementToPopulateValue.placeholder = value;
+            checkForInvalidId(populateValueToId, state.orderKeys);
+        }
+        newOrders.forEach(record => {
+            if (record.orderId === Number(orderId)) {
+                updateValue(record, orderKey, value, event);
+                if (populateValueToId !== undefined) {
+                    updateValue(record, populateValueToId, value, event);
+                }
+            }
+        })
+        setState({ ...state, orders: newOrders });
+    }
+
+    const handleChange = (event, targetValue) => {
+        if (targetValue === undefined) targetValue = event.target.value;
+        const id = event.target.id;
+        checkForInvalidId(id, state.summaryKeys);
+        updateOrderSummary(id, targetValue, event);
     }
 
     const handleDueDateChange = (event) => {
@@ -94,10 +129,7 @@ function WorkOrder() {
         const dueDate = new Date(`${event.target.value}:00${timezoneString}`).toISOString();
         const dueDateKey = 'due_timestamp';
         checkForInvalidId(dueDateKey, state.summaryKeys);
-        const newOrderSummary = { ...state.orderSummary };
-        newOrderSummary[dueDateKey] = dueDate;
-        setState({ ...state, orderSummary: newOrderSummary });
-
+        updateOrderSummary(dueDateKey, dueDate, event);
     }
 
     const processDateIn = () => {
@@ -105,15 +137,33 @@ function WorkOrder() {
         return `${new Date(date).toLocaleDateString(navigator.language)} ${new Date(date).toLocaleTimeString(navigator.language)}`
     }
 
+    const submitOrder = (event) => {
+        event.preventDefault();
+        console.log(state);
+        // Technically `orderId` is used for the UI to track records
+        // Since orders can be filtered the IDs may not be completely sequential
+        // so it may be cleaner to put new `orderID` keys in every time we need to display the records
+        const cleanedOrders = state.orders.map(record => {
+            delete record[ORDER_ID_KEY];
+            return record;
+        });
+        fetch('/orders', {
+            method: 'POST',
+            body: JSON.stringify({ ...state.orderSummary, orders: cleanedOrders }),
+            headers: { 'Content-type': 'application/json; charset=UTF-8' }
+        }).catch(error => console.log(error.message));
+        // alert('here');
+    }
+
     // TODO: on submit, need to validate due date
     return (
-        <form className='workOrder'>
+        <form onSubmit={submitOrder} className='workOrder'>
             <label>
                 On-Court:{' '}
                 <input
                     id='isOnCourt'
                     type='checkbox'
-                    onChange={(event) => handleChange(event.target.id, event.target.checked)}
+                    onChange={(event) => handleChange(event, event.target.checked)}
                 />
             </label>
             <label>Date in: {processDateIn()}</label>
@@ -123,16 +173,33 @@ function WorkOrder() {
                     id='due_timestamp'
                     type='datetime-local'
                     onChange={handleDueDateChange}
+                    required
                 />
             </label>
-            <label>First Name: <input type='text' /></label>
-            <label>Last Name: <input type='text' /></label>
+            <label>
+                First Name:{' '}
+                <input
+                    id='firstName'
+                    type='text'
+                    onChange={handleChange}
+                    required
+                />
+            </label>
+            <label>Last Name:{' '}
+                <input
+                    id='lastName'
+                    type='text'
+                    onChange={handleChange}
+                    required
+                />
+            </label>
             {
                 state.orders.map(order =>
                     <Order
                         state={state}
                         id={order.orderId}
                         handleRemoveOrder={handleRemoveOrderClick}
+                        handleOrderChange={handleOrderChange}
                         key={order.orderId}
                     />
                 )
@@ -142,27 +209,43 @@ function WorkOrder() {
                 <span>{' '}</span>
                 <span>More setups to record</span>
             </div>
-            <label id='notes'>
+            <label id='noteLabel'>
                 Notes:{' '}
-                <textarea />
+                <textarea
+                    id='notes'
+                    onChange={handleChange}
+                />
             </label>
-            <label>Stringer: <input type='text' /></label>
-            <label>Total: <input type='text' /></label>
+            <label>Stringer:{' '}
+                <input
+                    id='stringer'
+                    type='text'
+                    onChange={handleChange}
+                /></label>
+            <label>Total:{' '}
+                <input
+                    id='total_cost'
+                    type='number'
+                    onChange={handleChange}
+                /></label>
             <label>
                 Paid:{' '}
                 <input
                     id='isPaid'
                     type='checkbox'
-                    onChange={(event) => handleChange(event.target.id, event.target.checked)}
+                    onChange={(event) => handleChange(event, event.target.checked)}
                 />
             </label>
             <label>
                 Payment method:{' '}
-                <DropdownSelect
+                <DropdownSummary
+                    id='payment_method'
                     defaultValue={state.defaultEmptyValue}
                     valueList={['Cash', 'Credit Card', 'Debit Card', 'e-Transfer', 'Comp']}
+                    onDropdownChange={handleChange}
                 />
             </label>
+            <input type='submit' />
         </form>
     )
 

@@ -1,14 +1,15 @@
 @use './styles';
+@use './variables';
 
 .racquet-string-tension {
     display: flex;
     flex-direction: column;
     border: 1px solid grey;
-    margin: 0 0 0.5em 0;
-}
+    margin: 0.3em 0 0.5em 0;
 
-.racquet-string-tension>* {
-    margin: 0.2em 0.1em 0.2em 0.1em;
+    * {
+        margin: 0.15em 0.1em 0.15em 0.1em;
+    }
 }
 
 #first-order-row {
@@ -22,17 +23,25 @@
     @include styles.circle;
     background-color: rgb(239, 118, 37);
     color: white;
-    line-height: 0.5em;
+    line-height: 0.3em;
     height: 18px;
     width: 18px;
 }
 
 .halfsize-input {
     width: 35%;
+
+    &::placeholder {
+        color: variables.$placeholder-black;
+    }
 }
 
 .number-input {
     width: 20%;
+
+    &::placeholder {
+        color: variables.$placeholder-black;
+    }
 }
 
 #tension-units {

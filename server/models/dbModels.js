@@ -26,13 +26,13 @@ const ordersSchema = new Schema(
             {
                 num_of_racquets: Number,
                 racquet_name: String,   // TODO: establish relationship with racquet table
-                main_string: String,    // TODO: separating gauge?
-                main_tension: Number,
+                main_string: { type: String, required: true },    // TODO: separating gauge?
+                main_tension: { type: Number, required: true },
                 main_pre_stretch: String,    // TODO: establish relationship with PS table
-                cross_string: String,
-                cross_tension: Number,
+                cross_string: { type: String, required: true },
+                cross_tension: { type: Number, required: true },
                 cross_pre_stretch: String,
-                tension_measuring_unit: String,     // TODO: establish relationship with units table
+                tension_measuring_unit: { type: String, required: true },     // TODO: establish relationship with units table
                 num_of_knots: Number,   // Possible TODO: establish relationship with knots table
                 logo: String,
             }
