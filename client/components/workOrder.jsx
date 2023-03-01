@@ -6,7 +6,7 @@ import DropdownSummary from './dropdownSummary';
 
 const ORDER_ID_KEY = 'orderId';
 
-const initialState = {
+const initialStateTemplate = {
     orderSummary: {},
     summaryKeys: [],
     orders: [],
@@ -25,7 +25,13 @@ const initialState = {
 };
 
 function WorkOrder() {
-    const [state, setState] = useState(initialState);
+    const [state, setState] = useState({ ...initialStateTemplate });
+
+    const populateStateTemplate = (json) => {
+        // Populating the template to assist in resetting the form upon submission
+        initialStateTemplate.summaryKeys = json.summaryKeys;
+        initialStateTemplate.orderKeys = json.orderKeys;
+    }
 
     const createNewOrderState = (currentState = state, json = undefined) => {
         const initialSummary = {};
@@ -57,6 +63,10 @@ function WorkOrder() {
     useEffect(() => {
         fetch('/orders/schemaKeys')
             .then(response => response.json())
+            .then(result => {
+                populateStateTemplate(result);
+                return result;
+            })
             .then(result => createNewOrderState(state, result));
     }, []);
 
@@ -139,7 +149,6 @@ function WorkOrder() {
 
     const submitOrder = (event) => {
         event.preventDefault();
-        console.log(state);
         // Technically `orderId` is used for the UI to track records
         // Since orders can be filtered the IDs may not be completely sequential
         // so it may be cleaner to put new `orderID` keys in every time we need to display the records
@@ -151,8 +160,18 @@ function WorkOrder() {
             method: 'POST',
             body: JSON.stringify({ ...state.orderSummary, orders: cleanedOrders }),
             headers: { 'Content-type': 'application/json; charset=UTF-8' }
-        }).catch(error => console.log(error.message));
-        // alert('here');
+        })
+            .then(response => {
+                if (response.status !== 200) {
+                    console.log(response.statusText);
+                    alert('Failed to submit order. Please try again.')
+                } else {
+                    createNewOrderState(initialStateTemplate);
+                    document.querySelector('form').reset();
+                    alert('Order submitted!');
+                }
+            })
+            .catch(error => console.log(error.message));
     }
 
     // TODO: on submit, need to validate due date
