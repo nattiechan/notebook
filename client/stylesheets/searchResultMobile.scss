@@ -8,9 +8,10 @@
     grid-template-columns: 0.3fr repeat(3, 1fr);
     grid-template-areas:
         "n n n n"
-        "nr s s s"
-        "st st o o";
-    grid-gap: 0.2em;
+        "as as as as"
+        "st st o o"
+        "notes notes notes notes";
+    grid-gap: 0.3em;
     padding: 0.2em;
 
     &:hover {
@@ -21,16 +22,12 @@
         grid-area: n;
     }
 
-    #setup-label {
-        grid-area: sl;
-    }
-
-    #num-of-racquets {
-        grid-area: nr;
-    }
-
-    #setup {
-        grid-area: s;
+    #all-setups {
+        grid-area: as;
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.2em;
+        margin-bottom: 0;
     }
 
     #stringer {
@@ -40,20 +37,46 @@
     #on-court {
         grid-area: o;
         justify-self: end;
-    }
 
-    #on-court-indicator {
-        @include styles.circle;
-        height: 12px;
-        width: 12px;
+        #on-court-indicator {
+            @include styles.circle;
+            height: 14px;
+            width: 14px;
+            padding-bottom: 0.1em;
+        }
     }
 
     .yes {
-        background-color: #a3d0c1;
+        background-color: #4f8f9b;
     }
 
     .no {
-        background-color: #2e535a;
+        background-color: #b8babb;
+    }
+
+    #notes {
+        grid-area: notes;
+
+        p {
+            margin: 0.3em 0 0.3em 0;
+        }
+    }
+
+    #combo {
+        margin-bottom: 0.5em;
+        display: grid;
+        grid-template-columns: 0.3fr repeat(3, 1fr);
+        grid-template-areas: "nr s s s";
+        grid-gap: 0.3em;
+        padding: 0.2em;
+
+        #num-of-racquets {
+            grid-area: nr;
+        }
+
+        #setup {
+            grid-area: s;
+        }
     }
 
 }

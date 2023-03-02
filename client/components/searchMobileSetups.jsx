@@ -47,9 +47,9 @@ function SearchMobileSetups(props) {
     };
 
     return (
-        <>
+        <div id='combo'>
             {hasSameStrings ? sameStringElement() : differentStringElement()}
-        </>
+        </div>
     );
 }
 

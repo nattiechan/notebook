@@ -21,7 +21,9 @@ function ResultCardMobile(props) {
                 <label>Name:{' '}</label>
                 <span>{firstName} {lastName}</span>
             </div>
-            {orders.map(record => <SearchMobileSetups key={record._id} record={record} />)}
+            <div id='all-setups'>
+                {orders.map(record => <SearchMobileSetups key={record._id} record={record} />)}
+            </div>
             <div id='stringer'>
                 <label>Strung by:{' '}</label>
                 <span>{stringer}</span>
