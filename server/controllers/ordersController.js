@@ -59,7 +59,6 @@ ordersController.getOrders = (req, res, next) => {
             }
         );
     }
-    console.log(query);
     models.Orders.find(query).exec()
         .then(response => {
             if (response.length === 0) {

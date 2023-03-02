@@ -12,6 +12,9 @@ const initialState = {
 
 function OrderSearch() {
     const [searchState, setSearchState] = useState(initialState);
+    // this is somewhat of a workaround in place of cache
+    // TODO: Move this to a proper cache
+    const [allOrders, setAllOrders] = useState([]);
 
     useEffect(() => {
         fetch('/orders')
@@ -20,9 +23,12 @@ function OrderSearch() {
                 // So we do not have to use DB ID as element IDs
                 record.orderId = index;
                 return record;
-            }))
-            .then(records => setSearchState({ ...searchState, orders: records }))
-            .catch(error => console.error(error));
+            })
+            ).then(records => {
+                setSearchState({ ...searchState, orders: records });
+                setAllOrders(records);
+            }
+            ).catch(error => console.error(error));
     }, []);
 
     const handleNameChange = (event) => {
@@ -34,6 +40,8 @@ function OrderSearch() {
         checkForInvalidId(id, Object.keys(searchState));
         const newSearchState = { ...searchState };
         updateValue(newSearchState, id, event.target.value, event);
+        const inputs = document.querySelectorAll('input[type=search]');
+        if (Array.from(inputs).every(input => input.value === '')) newSearchState.orders = allOrders;
         setSearchState(newSearchState);
     }
 
@@ -53,7 +61,6 @@ function OrderSearch() {
                 } else {
                     const result = await response.json();
                     setSearchState({ ...searchState, orders: result });
-                    document.querySelector('form').reset();
                 }
             } catch (error) {
                 console.error(error.message);
