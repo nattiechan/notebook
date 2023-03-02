@@ -97,6 +97,7 @@ function WorkOrder() {
 
     const handleOrderChange = (orderId, event, populateValueToId) => {
         if (orderId === null || orderId === undefined) throw new Error('Invalid ID input');
+        let updatePopulatedValue = false;
         const orderKey = event.target.id;
         checkForInvalidId(orderKey, state.orderKeys);
         const value = event.target.value;
@@ -105,13 +106,16 @@ function WorkOrder() {
             const elementToPopulateValue = document
                 .querySelector(`section[id="${orderId}"]`)
                 .querySelector(`#${populateValueToId}`);
-            elementToPopulateValue.placeholder = value;
-            checkForInvalidId(populateValueToId, state.orderKeys);
+            if (elementToPopulateValue.value === '') {
+                elementToPopulateValue.placeholder = value;
+                checkForInvalidId(populateValueToId, state.orderKeys);
+                updatePopulatedValue = true;
+            }
         }
         newOrders.forEach(record => {
             if (record.orderId === Number(orderId)) {
                 updateValue(record, orderKey, value, event);
-                if (populateValueToId !== undefined) {
+                if (updatePopulatedValue) {
                     updateValue(record, populateValueToId, value, event);
                 }
             }
