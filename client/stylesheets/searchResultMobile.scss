@@ -1,8 +1,9 @@
 @use './styles';
+@use './variables';
 
 .resultCard {
-    background-color: white;
     border: 1px solid rgb(187, 186, 186);
+    background-color: white;
     margin-bottom: 0.5em;
     display: grid;
     grid-template-columns: 0.3fr repeat(3, 1fr);
@@ -16,6 +17,10 @@
 
     &:hover {
         box-shadow: 0 0 10px 1px rgb(172, 171, 171);
+    }
+
+    label {
+        color: darken(variables.$placeholder-black, 15%);
     }
 
     #name {
@@ -76,6 +81,7 @@
 
         #setup {
             grid-area: s;
+            line-height: 1.2em;
         }
     }
 

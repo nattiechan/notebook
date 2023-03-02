@@ -1,4 +1,5 @@
 @use './styles';
+@use './variables';
 
 section {
     @include styles.container;
@@ -10,17 +11,21 @@ section {
     }
 
     input[type=submit] {
+        @include styles.submit-button;
+        border-radius: 10%;
         margin: 0;
     }
 
     #searchBars {
         display: flex;
         justify-content: space-around;
-        margin-top: 0.5em;
+
+        input {
+            width: 80%;
+        }
     }
 
-    #no-result {
-        display: none;
-        color: red;
+    .alert {
+        @include styles.alerts;
     }
 }

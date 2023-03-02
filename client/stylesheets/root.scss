@@ -1,10 +1,12 @@
+@use './variables';
+
 body {
     margin: 0;
-    background-color: #f9fcfc;
+    background-color: variables.$background-color;
 }
 
 header {
-    background-color: #a3c9d0;
+    background-color: variables.$primary-color;
     padding: 0.5em;
     position: sticky;
     top: 0px;
@@ -24,6 +26,6 @@ header {
 
     .header-link {
         text-decoration: none;
-        color: black;
+        color: darken(variables.$placeholder-black, 5%);
     }
 }

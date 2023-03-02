@@ -15,6 +15,7 @@ form {
     color: white;
     height: 20px;
     width: 20px;
+    padding-top: 0.08em;
 }
 
 #noteLabel {
@@ -26,5 +27,8 @@ form {
 }
 
 input[type=submit] {
+    @include styles.submit-button;
     margin-top: 1em;
+    border-radius: 0.3em;
+    padding: 0.3em;
 }
