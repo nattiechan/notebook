@@ -25,7 +25,7 @@ router.post('/',
     (_, res) => res.status(200).json({ "id": res.locals.orderId })
 );
 
-router.delete('/:id',
+router.delete('/',
     ordersController.deleteOrder,
     (_, res) => res.status(200).json({ "id": res.locals.deletedId })
 );

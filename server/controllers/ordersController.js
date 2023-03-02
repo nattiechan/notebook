@@ -1,12 +1,13 @@
 const models = require('../models/dbModels');
 
-const createErrorMessage = (methodName) => `An error occurred in ordersController.${methodName}`;
+const createErrorMessage = (methodName) => {
+    return { err: `An error occurred in ordersController.${methodName}` };
+};
 
 const createError = (error, methodName) => {
-    console.log(error.message);
     return {
         log: error.message,
-        message: { err: createErrorMessage(methodName) },
+        message: createErrorMessage(methodName),
     };
 };
 
@@ -37,28 +38,40 @@ ordersController.getAllOrders = (_, res, next) => {
 }
 
 ordersController.getOrders = (req, res, next) => {
-    const generateRegexQuery = (string) => {
-        return { $regex: string, $options: 'i' };
-    }
-
     const { firstName, lastName } = req.query;
-    let query;
-    if (firstName !== '' && lastName !== '') {
-        query = {
-            firstName: generateRegexQuery(firstName),
-            lastName: generateRegexQuery(lastName)
-        };
-    }
-    else if (firstName === '') query = { lastName: generateRegexQuery(lastName) }
-    else if (lastName === '') query = { firstName: generateRegexQuery(firstName) }
-    else {
-        return next(
-            {
-                log: 'Empty query parameter',
-                message: createErrorMessage('getOrders')
-            }
-        );
-    }
+    const generateQuery = () => {
+        const generateRegexQuery = (string) => {
+            return { $regex: string, $options: 'i' };
+        }
+        const isEmptyFirstName = firstName === '' || firstName === undefined;
+        const isEmptyLastName = lastName === '' || lastName === undefined;
+        let query;
+        if (isEmptyFirstName && isEmptyLastName) {
+            return next(
+                {
+                    log: 'Empty query parameter',
+                    message: createErrorMessage('getOrders')
+                }
+            );
+        } else if (!isEmptyFirstName && !isEmptyLastName) {
+            query = {
+                firstName: generateRegexQuery(firstName),
+                lastName: generateRegexQuery(lastName)
+            };
+        }
+        else if (isEmptyFirstName) query = { lastName: generateRegexQuery(lastName) }
+        else if (isEmptyLastName) query = { firstName: generateRegexQuery(firstName) }
+        else {
+            return next(
+                {
+                    log: `Unable to generate query from firstName ${firstName} and lastName ${lastName}`,
+                    message: createErrorMessage('getOrders')
+                }
+            );
+        }
+        return query;
+    };
+    const query = generateQuery();
     models.Orders.find(query).exec()
         .then(response => {
             if (response.length === 0) {
@@ -84,7 +97,15 @@ ordersController.createOrder = (req, res, next) => {
 };
 
 ordersController.deleteOrder = (req, res, next) => {
-    const { id } = req.params;
+    const { id } = req.query;
+    if (id === undefined || id === null || id === '') {
+        return next(
+            {
+                log: 'Empty id parameter.',
+                message: createErrorMessage('deleteOrder')
+            }
+        );
+    }
     models.Orders.findByIdAndDelete(id).exec()
         .then(response => {
             // Deletion of a non-existing document is a no-op
@@ -95,7 +116,8 @@ ordersController.deleteOrder = (req, res, next) => {
             res.locals.deletedId = response._id
             return next();
         })
-        .catch(error => next(createError(error, 'deleteOrder')));
+        .catch(error => next(createError(error, 'deleteOrder'))
+        );
 };
 
 module.exports = ordersController;

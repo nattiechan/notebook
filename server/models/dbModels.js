@@ -1,17 +1,9 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const connectDb = require('./dbHelper');
 const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@stringermate.tduofoz.mongodb.net/?retryWrites=true&w=majority`;
 
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: 'stringmate'
-})
-    .then(() => console.log('Connected to Mongo DB.'))
-    .catch(error => {
-        console.log(error);
-        process.exit(1);
-    });
+if (process.env.NODE_ENV !== 'test') connectDb(MONGODB_URI);
 
 const Schema = mongoose.Schema;
 
