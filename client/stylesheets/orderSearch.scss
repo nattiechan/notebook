@@ -18,4 +18,9 @@ section {
         justify-content: space-around;
         margin-top: 0.5em;
     }
+
+    #no-result {
+        display: none;
+        color: red;
+    }
 }

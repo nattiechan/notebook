@@ -1,4 +1,5 @@
 import React from 'react';
+import { checkForInvalidId, updateValue } from './componentHelper';
 import Order from './order';
 import { useEffect, useState } from 'react';
 import '../stylesheets/workOrder.scss';
@@ -87,18 +88,10 @@ function WorkOrder() {
         setState({ ...state, orders: newOrders });
     };
 
-    const checkForInvalidId = (id, keyArray) => {
-        if (!keyArray.includes(id)) throw new Error(`Invalid element ID ${id}`);
-    }
-
     const updateOrderSummary = (key, value, event) => {
         const newOrderSummary = { ...state.orderSummary };
         updateValue(newOrderSummary, key, value, event);
         setState({ ...state, orderSummary: newOrderSummary });
-    }
-
-    const updateValue = (obj, key, value, event) => {
-        obj[key] = event.target.type === 'number' ? Number(value) : value;
     }
 
     const handleOrderChange = (orderId, event, populateValueToId) => {

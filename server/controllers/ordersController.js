@@ -1,10 +1,12 @@
 const models = require('../models/dbModels');
 
+const createErrorMessage = (methodName) => `An error occurred in ordersController.${methodName}`;
+
 const createError = (error, methodName) => {
     console.log(error.message);
     return {
         log: error.message,
-        message: { err: `An error occurred in ordersController.${methodName}` },
+        message: { err: createErrorMessage(methodName) },
     };
 };
 
@@ -21,8 +23,12 @@ ordersController.getAllOrders = (_, res, next) => {
     models.Orders.find({}).exec()
         .then(response => {
             if (response.length === 0) {
-                const message = `No entries found in database.`;
-                return next({ log: message, message: message });
+                return next(
+                    {
+                        log: 'No entries found in database.',
+                        message: createErrorMessage('getAllOrders')
+                    }
+                );
             }
             res.locals.allOrders = response;
             return next();
@@ -31,12 +37,38 @@ ordersController.getAllOrders = (_, res, next) => {
 }
 
 ordersController.getOrders = (req, res, next) => {
+    const generateRegexQuery = (string) => {
+        return { $regex: string, $options: 'i' };
+    }
+
     const { firstName, lastName } = req.query;
-    models.Orders.find({ firstName, lastName }).exec()
+    let query;
+    if (firstName !== '' && lastName !== '') {
+        query = {
+            firstName: generateRegexQuery(firstName),
+            lastName: generateRegexQuery(lastName)
+        };
+    }
+    else if (firstName === '') query = { lastName: generateRegexQuery(lastName) }
+    else if (lastName === '') query = { firstName: generateRegexQuery(firstName) }
+    else {
+        return next(
+            {
+                log: 'Empty query parameter',
+                message: createErrorMessage('getOrders')
+            }
+        );
+    }
+    console.log(query);
+    models.Orders.find(query).exec()
         .then(response => {
             if (response.length === 0) {
-                const message = `No entries found for name ${firstName} ${lastName}.`;
-                return next({ log: message, message: message });
+                return next(
+                    {
+                        log: `No entries found for name ${firstName} ${lastName}.`,
+                        message: createErrorMessage('getOrders')
+                    }
+                );
             }
             res.locals.orders = response;
             return next();
@@ -58,7 +90,7 @@ ordersController.deleteOrder = (req, res, next) => {
         .then(response => {
             // Deletion of a non-existing document is a no-op
             if (response === null) {
-                console.log(`No entries found for ID ${id}.`)
+                console.warn(`No entries found for ID ${id}.`)
                 return next();
             }
             res.locals.deletedId = response._id
