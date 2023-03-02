@@ -135,7 +135,6 @@ function WorkOrder() {
         // current datetime first, and then construct a timezone-aware date string manually
         // TODO: This may require some test mocking timezones - https://www.npmjs.com/package/timezone-mock
         // TODO: Double check this is getting client's timezone and not the server's
-        console.log(event.target.value);
         const timezone = new Date().getTimezoneOffset() / 60;
         const timezoneHour = `${Math.abs(timezone).toString().padStart(2, '0')}:00`;
         // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#negative_values_and_positive_values
@@ -143,7 +142,6 @@ function WorkOrder() {
         const dueDate = new Date(`${event.target.value}:00${timezoneString}`).toISOString();
         const dueDateKey = 'due_timestamp';
         checkForInvalidId(dueDateKey, state.summaryKeys);
-        console.log(dueDate);
         updateOrderSummary(dueDateKey, dueDate, event);
     }
 
@@ -168,7 +166,7 @@ function WorkOrder() {
         })
             .then(response => {
                 if (response.status !== 200) {
-                    console.log(response.statusText);
+                    console.error(response.statusText);
                     alert('Failed to submit order. Please try again.')
                 } else {
                     createNewState(initialStateTemplate);
@@ -176,7 +174,7 @@ function WorkOrder() {
                     alert('Order submitted!');
                 }
             })
-            .catch(error => console.log(error.message));
+            .catch(error => console.error(error.message));
     }
 
     // TODO: on submit, need to validate due date
