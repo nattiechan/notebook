@@ -33,20 +33,25 @@ function WorkOrder() {
         initialStateTemplate.orderKeys = json.orderKeys;
     }
 
-    const createNewOrderState = (currentState = state, json = undefined) => {
-        const initialSummary = {};
+    const processKeys = (keyArray, currentState, initialObj = {}) => {
+        keyArray.forEach(key =>
+            initialObj[key] = currentState.defaultUnits.hasOwnProperty(key) ?
+                currentState.defaultUnits[key] : ''
+        );
+        return initialObj;
+    }
+
+    const createNewOrder = (keyArray, currentState) => {
         const initialOrder = {};
-        initialOrder[ORDER_ID_KEY] = state.nextOrderId;
+        initialOrder[ORDER_ID_KEY] = currentState.nextOrderId;
+        return processKeys(keyArray, currentState, initialOrder);
+    }
+
+    const createNewState = (currentState = state, json = undefined) => {
         const summaryKeyArray = json ? json.summaryKeys : currentState.summaryKeys;
         const orderKeyArray = json ? json.orderKeys : currentState.orderKeys;
-        const processKeys = (keyArray, initialObj) => {
-            keyArray.forEach(key =>
-                initialObj[key] = currentState.defaultUnits.hasOwnProperty(key) ?
-                    currentState.defaultUnits[key] : ''
-            );
-        }
-        processKeys(summaryKeyArray, initialSummary);
-        processKeys(orderKeyArray, initialOrder);
+        const initialSummary = processKeys(summaryKeyArray, currentState);
+        const initialOrder = createNewOrder(orderKeyArray, currentState);
         const newState = {
             ...currentState,
             nextOrderId: currentState.nextOrderId + 1,
@@ -67,12 +72,13 @@ function WorkOrder() {
                 populateStateTemplate(result);
                 return result;
             })
-            .then(result => createNewOrderState(state, result));
+            .then(result => createNewState(state, result));
     }, []);
 
     const handleMoreOrderClick = (event) => {
         event.preventDefault();
-        createNewOrderState();
+        const newOrder = createNewOrder(state.orderKeys, state);
+        setState({ ...state, orders: [...state.orders, newOrder] })
     };
 
     const handleRemoveOrderClick = (event) => {
@@ -136,6 +142,7 @@ function WorkOrder() {
         // current datetime first, and then construct a timezone-aware date string manually
         // TODO: This may require some test mocking timezones - https://www.npmjs.com/package/timezone-mock
         // TODO: Double check this is getting client's timezone and not the server's
+        console.log(event.target.value);
         const timezone = new Date().getTimezoneOffset() / 60;
         const timezoneHour = `${Math.abs(timezone).toString().padStart(2, '0')}:00`;
         // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#negative_values_and_positive_values
@@ -143,6 +150,7 @@ function WorkOrder() {
         const dueDate = new Date(`${event.target.value}:00${timezoneString}`).toISOString();
         const dueDateKey = 'due_timestamp';
         checkForInvalidId(dueDateKey, state.summaryKeys);
+        console.log(dueDate);
         updateOrderSummary(dueDateKey, dueDate, event);
     }
 
@@ -170,7 +178,7 @@ function WorkOrder() {
                     console.log(response.statusText);
                     alert('Failed to submit order. Please try again.')
                 } else {
-                    createNewOrderState(initialStateTemplate);
+                    createNewState(initialStateTemplate);
                     document.querySelector('form').reset();
                     alert('Order submitted!');
                 }
