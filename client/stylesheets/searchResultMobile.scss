@@ -1,0 +1,59 @@
+@use './styles';
+
+.resultCard {
+    background-color: white;
+    border: 1px solid rgb(187, 186, 186);
+    margin-bottom: 0.5em;
+    display: grid;
+    grid-template-columns: 0.3fr repeat(3, 1fr);
+    grid-template-areas:
+        "n n n n"
+        "nr s s s"
+        "st st o o";
+    grid-gap: 0.2em;
+    padding: 0.2em;
+
+    &:hover {
+        box-shadow: 0 0 10px 1px rgb(172, 171, 171);
+    }
+
+    #name {
+        grid-area: n;
+    }
+
+    #setup-label {
+        grid-area: sl;
+    }
+
+    #num-of-racquets {
+        grid-area: nr;
+    }
+
+    #setup {
+        grid-area: s;
+    }
+
+    #stringer {
+        grid-area: st;
+    }
+
+    #on-court {
+        grid-area: o;
+        justify-self: end;
+    }
+
+    #on-court-indicator {
+        @include styles.circle;
+        height: 12px;
+        width: 12px;
+    }
+
+    .yes {
+        background-color: #a3d0c1;
+    }
+
+    .no {
+        background-color: #2e535a;
+    }
+
+}

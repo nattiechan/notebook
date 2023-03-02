@@ -17,6 +17,19 @@ ordersController.getSchemaKeys = (_, res, next) => {
     return next();
 }
 
+ordersController.getAllOrders = (_, res, next) => {
+    models.Orders.find({}).exec()
+        .then(response => {
+            if (response.length === 0) {
+                const message = `No entries found in database.`;
+                return next({ log: message, message: message });
+            }
+            res.locals.allOrders = response;
+            return next();
+        })
+        .catch(error => next(createError(error, 'getAllOrders')));
+}
+
 ordersController.getOrders = (req, res, next) => {
     const { firstName, lastName } = req.query;
     models.Orders.find({ firstName, lastName }).exec()

@@ -10,9 +10,14 @@ router.get('/schemaKeys',
     )
 );
 
-router.get('/',
+router.get('/name',
     ordersController.getOrders,
     (_, res) => res.status(200).json(res.locals.orders)
+);
+
+router.get('/',
+    ordersController.getAllOrders,
+    (_, res) => res.status(200).json(res.locals.allOrders)
 );
 
 router.post('/',

@@ -2,7 +2,7 @@
 
 form {
     @include styles.flex-column;
-    margin: 0.3em;
+    @include styles.container;
 
     * {
         margin: 0.2em 0.1em 0.2em 0.1em;

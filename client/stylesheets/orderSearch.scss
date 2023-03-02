@@ -1,0 +1,21 @@
+@use './styles';
+
+section {
+    @include styles.container;
+    margin-top: 1em;
+
+    #searchBy {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    input[type=submit] {
+        margin: 0;
+    }
+
+    #searchBars {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 0.5em;
+    }
+}
