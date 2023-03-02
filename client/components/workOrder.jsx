@@ -79,7 +79,13 @@ function WorkOrder() {
     const handleMoreOrderClick = (event) => {
         event.preventDefault();
         const newOrder = createNewOrder(state.orderKeys, state);
-        setState({ ...state, orders: [...state.orders, newOrder] })
+        setState(
+            {
+                ...state,
+                nextOrderId: state.nextOrderId + 1,
+                orders: [...state.orders, newOrder]
+            }
+        );
     };
 
     const handleRemoveOrderClick = (event) => {
