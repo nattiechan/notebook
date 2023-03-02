@@ -7,7 +7,7 @@ const {
     order1,
     order2,
     badOrderMissingRequiredTimestamp
-} = require('./apiOrderHelper');
+} = require('./helpers/apiOrderHelper');
 
 describe('GET /', () => {
     it('responds with 200 status and text/html content type', () => {
