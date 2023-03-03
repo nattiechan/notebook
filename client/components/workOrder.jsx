@@ -177,6 +177,8 @@ function WorkOrder() {
                 } else {
                     createNewState(initialStateTemplate);
                     document.querySelector('form').reset();
+                    document.querySelector('#cross_string').placeholder = '';
+                    document.querySelector('#cross_tension').placeholder = '';
                     alert('Order submitted!');
                 }
             })
