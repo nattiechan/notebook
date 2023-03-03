@@ -1,12 +1,12 @@
 # Notebook
-### A Software for Tournament Stringers
-_Currently in Alpha development_
+### A Web Application for Tournament Stringers
+_Currently a proof-of-concept_
 
 -----------------------
 
 ### Demo:
 
-Done on chrome browser with [Mobile simulator - responsive testing tool Chrome extension](https://chrome.google.com/webstore/detail/mobile-simulator-responsi/ckejmhbmlajgoklhgbapkiccekfoccmk). 
+Since this application is done in a _mobile-first approach_, the current iteration is best viewed on a mobile screen. This clip is done on chrome browser with [Mobile simulator - responsive testing tool Chrome extension](https://chrome.google.com/webstore/detail/mobile-simulator-responsi/ckejmhbmlajgoklhgbapkiccekfoccmk). 
 
 The device of choice is iPhone 11 Pro.
 
@@ -24,10 +24,10 @@ _The ultimate goal of this project is to create an open-source software for tour
 
 ------------------------
 
-### Tech stack and rationale
+### Current tech stack
 
 - MERN: MongoDB, Express, React, Node
 - React router
 - Webpack
-- Test suite: Jest, supertest, React testing library, Cypress
+- Test suite: Jest, Supertest, React testing library, Cypress
 
