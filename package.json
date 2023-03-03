@@ -10,7 +10,7 @@
     "build": "NODE_ENV=production webpack",
     "test": "NODE_ENV=test jest",
     "cy:run": "cypress open",
-    "e2e-test": "start-server-and-test start http://localhost:8080 cy:run"
+    "e2e-test": "NODE_ENV=cypress start-server-and-test start http://localhost:8080 cy:run"
   },
   "repository": {
     "type": "git",

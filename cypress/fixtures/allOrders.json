@@ -1,0 +1,166 @@
+[
+    {
+        "_id": "63ffcf31074aba01f937bcea",
+        "date_in": "2023-03-01T22:18:03.232Z",
+        "due_timestamp": "2023-03-01T22:18:00.000Z",
+        "firstName": "Joe",
+        "lastName": "Smith",
+        "isOnCourt": false,
+        "orders": [
+            {
+                "num_of_racquets": 2,
+                "racquet_name": "",
+                "main_string": "Alu Power",
+                "main_tension": 48,
+                "main_pre_stretch": "",
+                "cross_string": "Alu Power",
+                "cross_tension": 48,
+                "cross_pre_stretch": "",
+                "tension_measuring_unit": "lbs",
+                "num_of_knots": 4,
+                "logo": "",
+                "_id": "63ffcf31074aba01f937bceb"
+            }
+        ],
+        "notes": "",
+        "stringer": "",
+        "total_cost": null,
+        "isPaid": false,
+        "payment_method": "",
+        "__v": 0
+    },
+    {
+        "_id": "63fff2f8cf39a4528b6e21cd",
+        "date_in": "2023-03-02T00:50:30.023Z",
+        "due_timestamp": "2023-03-04T18:53:00.000Z",
+        "firstName": "Mary",
+        "lastName": "Targon",
+        "isOnCourt": false,
+        "orders": [
+            {
+                "num_of_racquets": 1,
+                "racquet_name": "Wilson",
+                "main_string": "4G 1.30",
+                "main_tension": 47,
+                "main_pre_stretch": "",
+                "cross_string": "VS Touch",
+                "cross_tension": 52,
+                "cross_pre_stretch": "10%",
+                "tension_measuring_unit": "lbs",
+                "num_of_knots": 4,
+                "logo": "Red",
+                "_id": "63fff2f8cf39a4528b6e21ce"
+            }
+        ],
+        "notes": "",
+        "stringer": "JL",
+        "total_cost": null,
+        "isPaid": false,
+        "payment_method": "",
+        "__v": 0
+    },
+    {
+        "_id": "64001a49df3ffd246ef8f03b",
+        "date_in": "2023-03-02T03:36:24.328Z",
+        "due_timestamp": "2023-03-05T17:37:00.000Z",
+        "firstName": "Nathan",
+        "lastName": "Ferguson",
+        "isOnCourt": false,
+        "orders": [
+            {
+                "num_of_racquets": 1,
+                "racquet_name": "Pure Aero",
+                "main_string": "VS Touch",
+                "main_tension": 53,
+                "main_pre_stretch": "10%",
+                "cross_string": "RPM",
+                "cross_tension": 50,
+                "cross_pre_stretch": "",
+                "tension_measuring_unit": "lbs",
+                "num_of_knots": 4,
+                "logo": "White",
+                "_id": "64001a49df3ffd246ef8f03c"
+            },
+            {
+                "num_of_racquets": 2,
+                "racquet_name": "Pure Aero",
+                "main_string": "VS Touch",
+                "main_tension": 50,
+                "main_pre_stretch": "10%",
+                "cross_string": "RPM",
+                "cross_tension": 47,
+                "cross_pre_stretch": "",
+                "tension_measuring_unit": "lbs",
+                "num_of_knots": 4,
+                "logo": "White",
+                "_id": "64001a49df3ffd246ef8f03d"
+            }
+        ],
+        "notes": "String AM",
+        "stringer": "NC",
+        "total_cost": 50,
+        "isPaid": false,
+        "payment_method": "",
+        "__v": 0
+    },
+    {
+        "_id": "64001d2fdf3ffd246ef8f10b",
+        "date_in": "2023-03-02T03:47:03.472Z",
+        "due_timestamp": "2023-03-02T04:21:00.000Z",
+        "firstName": "Ken",
+        "lastName": "Harrison",
+        "isOnCourt": true,
+        "orders": [
+            {
+                "num_of_racquets": 1,
+                "racquet_name": "Speed",
+                "main_string": "Hawk Power",
+                "main_tension": 26,
+                "main_pre_stretch": "",
+                "cross_string": "Hawk Power",
+                "cross_tension": 26,
+                "cross_pre_stretch": "",
+                "tension_measuring_unit": "kg",
+                "num_of_knots": 4,
+                "logo": "White",
+                "_id": "64001d2fdf3ffd246ef8f10c"
+            }
+        ],
+        "notes": "Court 13",
+        "stringer": "AN",
+        "total_cost": 25,
+        "isPaid": false,
+        "payment_method": "",
+        "__v": 0
+    },
+    {
+        "_id": "640117d83bd98fc1ff4c9179",
+        "date_in": "2023-03-02T21:38:55.284Z",
+        "due_timestamp": "2023-03-14T22:39:00.000Z",
+        "firstName": "Connor",
+        "lastName": "Von Weber",
+        "isOnCourt": false,
+        "orders": [
+            {
+                "num_of_racquets": 6,
+                "racquet_name": "Speed",
+                "main_string": "Hawk Touch",
+                "main_tension": 24,
+                "main_pre_stretch": "",
+                "cross_string": "Hawk Touch",
+                "cross_tension": 24,
+                "cross_pre_stretch": "",
+                "tension_measuring_unit": "kg",
+                "num_of_knots": 4,
+                "logo": "White",
+                "_id": "640117d83bd98fc1ff4c917a"
+            }
+        ],
+        "notes": "Reverse logo",
+        "stringer": "JR",
+        "total_cost": 120,
+        "isPaid": false,
+        "payment_method": "Credit Card",
+        "__v": 0
+    }
+]

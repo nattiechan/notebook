@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "63ffcf31074aba01f937bcea",
+    "date_in": "2023-03-01T22:18:03.232Z",
+    "due_timestamp": "2023-03-01T22:18:00.000Z",
+    "firstName": "Joe",
+    "lastName": "Smith",
+    "isOnCourt": false,
+    "orders": [
+      {
+        "num_of_racquets": 2,
+        "racquet_name": "",
+        "main_string": "Alu Power",
+        "main_tension": 48,
+        "main_pre_stretch": "",
+        "cross_string": "Alu Power",
+        "cross_tension": 48,
+        "cross_pre_stretch": "",
+        "tension_measuring_unit": "lbs",
+        "num_of_knots": 4,
+        "logo": "",
+        "_id": "63ffcf31074aba01f937bceb"
+      }
+    ],
+    "notes": "",
+    "stringer": "",
+    "total_cost": null,
+    "isPaid": false,
+    "payment_method": "",
+    "__v": 0
+  }
+]

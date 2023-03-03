@@ -5,7 +5,7 @@ import SearchMobileSetups from './searchMobileSetups';
 function SearchResultMobile(props) {
     const { orders } = props;
     return (
-        <section>
+        <section data-test-id='results'>
             {orders.map((order) => <ResultCardMobile key={order._id} order={order} />)}
         </section>
     )

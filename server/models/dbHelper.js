@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const connectDb = (uri) => {
+    const dbName = process.env.NODE_ENV === 'cypress' ? 'stringmate-cypress' : 'stringmate';
     return mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: 'stringmate'
+        dbName: dbName
     })
         .then(() => console.log('Connected to Mongo DB.'))
         .catch(error => {
