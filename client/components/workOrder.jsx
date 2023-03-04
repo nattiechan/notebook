@@ -1,70 +1,21 @@
 import React from 'react';
-import { checkForInvalidId, updateValue } from './componentHelper';
+import {
+    CREATE_NEW_STATE,
+    CREATE_NEW_ORDER,
+    RESET_ORDER,
+    UPDATE_ORDER,
+    REMOVE_ORDER,
+    UPDATE_ORDER_SUMMARY
+} from '../contexts/actionTypes';
 import Order from './order';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import '../stylesheets/workOrder.scss';
 import DropdownSummary from './dropdownSummary';
-
-const ORDER_ID_KEY = 'orderId';
-
-const initialStateTemplate = {
-    orderSummary: {},
-    summaryKeys: [],
-    orders: [],
-    orderKeys: [],
-    nextOrderId: 1,
-    defaultEmptyValue: '',
-    // The keys should always be in sync with the schema in `dbModels.js`
-    defaultUnits: {
-        'tension_measuring_unit': 'lbs',
-        'num_of_knots': 4,
-        'num_of_racquets': 1,
-        'isOnCourt': false,
-        'isPaid': false,
-        'date_in': new Date().toISOString()
-    },
-};
+import { populateStateTemplate, useWorkOrderContext } from '../contexts/workOrderContext';
+import { ORDER_ID_KEY } from '../contexts/workOrderContextHelper';
 
 function WorkOrder() {
-    const [state, setState] = useState({ ...initialStateTemplate });
-
-    const populateStateTemplate = (json) => {
-        // Populating the template to assist in resetting the form upon submission
-        initialStateTemplate.summaryKeys = json.summaryKeys;
-        initialStateTemplate.orderKeys = json.orderKeys;
-    }
-
-    const processKeys = (keyArray, currentState, initialObj = {}) => {
-        keyArray.forEach(key =>
-            initialObj[key] = currentState.defaultUnits.hasOwnProperty(key) ?
-                currentState.defaultUnits[key] : ''
-        );
-        return initialObj;
-    }
-
-    const createNewOrder = (keyArray, currentState) => {
-        const initialOrder = {};
-        initialOrder[ORDER_ID_KEY] = currentState.nextOrderId;
-        return processKeys(keyArray, currentState, initialOrder);
-    }
-
-    const createNewState = (currentState = state, json = undefined) => {
-        const summaryKeyArray = json ? json.summaryKeys : currentState.summaryKeys;
-        const orderKeyArray = json ? json.orderKeys : currentState.orderKeys;
-        const initialSummary = processKeys(summaryKeyArray, currentState);
-        const initialOrder = createNewOrder(orderKeyArray, currentState);
-        const newState = {
-            ...currentState,
-            nextOrderId: currentState.nextOrderId + 1,
-            orderSummary: initialSummary,
-            orders: [...currentState.orders, initialOrder]
-        };
-        if (json) {
-            newState.summaryKeys = summaryKeyArray;
-            newState.orderKeys = orderKeyArray;
-        }
-        setState(newState);
-    }
+    const [state, dispatch] = useWorkOrderContext();
 
     useEffect(() => {
         fetch('/orders/schemaKeys')
@@ -73,66 +24,40 @@ function WorkOrder() {
                 populateStateTemplate(result);
                 return result;
             })
-            .then(result => createNewState(state, result));
+            .then(result => dispatch({ type: CREATE_NEW_STATE, payload: result }));
     }, []);
 
     const handleMoreOrderClick = (event) => {
         event.preventDefault();
-        const newOrder = createNewOrder(state.orderKeys, state);
-        setState(
-            {
-                ...state,
-                nextOrderId: state.nextOrderId + 1,
-                orders: [...state.orders, newOrder]
-            }
-        );
+        dispatch({ type: CREATE_NEW_ORDER });
     };
 
     const handleRemoveOrderClick = (event) => {
         event.preventDefault();
-        const newOrders = state.orders.filter(order => order.orderId !== Number(event.target.id));
-        setState({ ...state, orders: newOrders });
+        dispatch({ type: REMOVE_ORDER, orderId: event.target.id });
     };
-
-    const updateOrderSummary = (key, value, event) => {
-        const newOrderSummary = { ...state.orderSummary };
-        updateValue(newOrderSummary, key, value, event);
-        setState({ ...state, orderSummary: newOrderSummary });
-    }
 
     const handleOrderChange = (orderId, event, populateValueToId) => {
         if (orderId === null || orderId === undefined) throw new Error('Invalid ID input');
-        let updatePopulatedValue = false;
-        const orderKey = event.target.id;
-        checkForInvalidId(orderKey, state.orderKeys);
-        const value = event.target.value;
-        const newOrders = [...state.orders];
+        const { id, value } = event.target;
+        const keysToUpdate = {};
+        keysToUpdate[id] = value;
         if (populateValueToId !== undefined) {
             const elementToPopulateValue = document
                 .querySelector(`section[id="${orderId}"]`)
                 .querySelector(`#${populateValueToId}`);
             if (elementToPopulateValue.value === '') {
                 elementToPopulateValue.placeholder = value;
-                checkForInvalidId(populateValueToId, state.orderKeys);
-                updatePopulatedValue = true;
+                keysToUpdate[populateValueToId] = value;
             }
         }
-        newOrders.forEach(record => {
-            if (record.orderId === Number(orderId)) {
-                updateValue(record, orderKey, value, event);
-                if (updatePopulatedValue) {
-                    updateValue(record, populateValueToId, value, event);
-                }
-            }
-        })
-        setState({ ...state, orders: newOrders });
+        dispatch({ type: UPDATE_ORDER, orderId: orderId, keysToUpdate: keysToUpdate, event: event })
     }
 
     const handleChange = (event, targetValue) => {
-        if (targetValue === undefined) targetValue = event.target.value;
-        const id = event.target.id;
-        checkForInvalidId(id, state.summaryKeys);
-        updateOrderSummary(id, targetValue, event);
+        const { id, value } = event.target;
+        if (targetValue === undefined) targetValue = value;
+        dispatch({ type: UPDATE_ORDER_SUMMARY, key: id, value: targetValue, event: event });
     }
 
     const handleDueDateChange = (event) => {
@@ -147,8 +72,7 @@ function WorkOrder() {
         const timezoneString = timezone > 0 ? `-${timezoneHour}` : timezoneHour;
         const dueDate = new Date(`${event.target.value}:00${timezoneString}`).toISOString();
         const dueDateKey = 'due_timestamp';
-        checkForInvalidId(dueDateKey, state.summaryKeys);
-        updateOrderSummary(dueDateKey, dueDate, event);
+        dispatch({ type: UPDATE_ORDER_SUMMARY, key: dueDateKey, value: dueDate, event: event });
     }
 
     const processDateIn = () => {
@@ -175,7 +99,7 @@ function WorkOrder() {
                     console.error(response.statusText);
                     alert('Failed to submit order. Please try again.')
                 } else {
-                    createNewState(initialStateTemplate);
+                    dispatch({ type: RESET_ORDER })
                     document.querySelector('form').reset();
                     document.querySelector('#cross_string').placeholder = '';
                     document.querySelector('#cross_tension').placeholder = '';
@@ -275,7 +199,7 @@ function WorkOrder() {
                     onDropdownChange={handleChange}
                 />
             </label>
-            <input type='submit' />
+            <input className='longSubmit' type='submit' />
         </form>
     )
 

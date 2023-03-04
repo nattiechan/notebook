@@ -26,9 +26,9 @@ form {
     }
 }
 
-input[type=submit] {
+.longSubmit {
     @include styles.submit-button;
     margin-top: 1em;
-    border-radius: 0.3em;
+    border-radius: 0.2em;
     padding: 0.3em;
 }

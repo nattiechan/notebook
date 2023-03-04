@@ -75,7 +75,7 @@ function OrderSearch() {
             <form onSubmit={submitSearch}>
                 <div id='searchBy'>
                     <label>Search By: </label>
-                    <input type='submit' />
+                    <input className='submit' type='submit' />
                 </div>
                 <div id='searchBars'>
                     <input

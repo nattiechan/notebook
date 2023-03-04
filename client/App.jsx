@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import OrderSearch from './components/orderSearch';
 import Root from './components/root';
-import WorkOrder from './components/workOrder';
+import WorkOrderContainer from './components/workOrderContainer';
 
 const router = createBrowserRouter([
     {
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/workorder",
-                element: <WorkOrder />,
+                element: <WorkOrderContainer />,
             }
         ]
     }

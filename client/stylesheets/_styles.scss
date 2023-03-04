@@ -38,3 +38,7 @@
     display: none;
     color: #9b4f6a
 }
+
+@mixin faint-border {
+    border: 1px solid rgb(187, 186, 186);
+}

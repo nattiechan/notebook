@@ -10,7 +10,7 @@ section {
         justify-content: space-between;
     }
 
-    input[type=submit] {
+    .submit {
         @include styles.submit-button;
         border-radius: 10%;
         margin: 0;
